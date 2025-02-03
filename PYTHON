@@ -1,0 +1,57 @@
+import pandas as pd
+
+def load_data(file_path):
+    # Load the dataset into a pandas dataframe
+    return pd.read_csv(file_path)
+
+def count_race(data):
+    # How many people of each race are represented in the dataset?
+    return data['race'].value_counts()
+
+def average_age_of_men(data):
+    # What is the average age of men?
+    men_data = data[data['sex'] == 'Male']
+    return men_data['age'].mean()
+
+def percentage_bachelor_degree(data):
+    # What is the percentage of people who have a Bachelor's degree?
+    bachelor_degree_count = data[data['education'] == 'Bachelors'].shape[0]
+    total_count = data.shape[0]
+    return round((bachelor_degree_count / total_count) * 100, 1)
+
+def percentage_advanced_education_high_salary(data):
+    # What percentage of people with advanced education (Bachelors, Masters, or Doctorate) make more than 50K?
+    advanced_education = data[data['education'].isin(['Bachelors', 'Masters', 'Doctorate'])]
+    high_salary_count = advanced_education[advanced_education['salary'] == '>50K'].shape[0]
+    return round((high_salary_count / advanced_education.shape[0]) * 100, 1)
+
+def percentage_no_advanced_education_high_salary(data):
+    # What percentage of people without advanced education make more than 50K?
+    no_advanced_education = data[~data['education'].isin(['Bachelors', 'Masters', 'Doctorate'])]
+    high_salary_count = no_advanced_education[no_advanced_education['salary'] == '>50K'].shape[0]
+    return round((high_salary_count / no_advanced_education.shape[0]) * 100, 1)
+
+def min_hours_worked(data):
+    # What is the minimum number of hours a person works per week?
+    return data['hours-per-week'].min()
+
+def percentage_high_salary_min_hours(data):
+    # What percentage of the people who work the minimum number of hours per week have a salary of more than 50K?
+    min_hours = data['hours-per-week'].min()
+    min_hours_data = data[data['hours-per-week'] == min_hours]
+    high_salary_count = min_hours_data[min_hours_data['salary'] == '>50K'].shape[0]
+    return round((high_salary_count / min_hours_data.shape[0]) * 100, 1)
+
+def country_highest_percentage_high_salary(data):
+    # What country has the highest percentage of people that earn >50K and what is that percentage?
+    country_salary = data.groupby('native-country')['salary'].value_counts(normalize=True).unstack()
+    country_salary = country_salary.apply(lambda x: x.get('>50K', 0) * 100, axis=1)
+    highest_country = country_salary.idxmax()
+    highest_percentage = country_salary.max()
+    return highest_country, round(highest_percentage, 1)
+
+def most_popular_occupation_india_high_salary(data):
+    # Identify the most popular occupation for those who earn >50K in India.
+    india_high_salary = data[(data['native-country'] == 'India') & (data['salary'] == '>50K')]
+    most_popular_occupation = india_high_salary['occupation'].mode()[0]
+    return most_popular_occupation
