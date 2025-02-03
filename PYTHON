@@ -1,0 +1,44 @@
+import numpy as np
+
+def calculate(numbers):
+    if len(numbers) != 9:
+        raise ValueError("List must contain nine numbers.")
+    
+    # Convert the list to a 3x3 Numpy array
+    matrix = np.array(numbers).reshape(3, 3)
+    
+    # Create the dictionary with the required statistics
+    calculations = {
+        'mean': [
+            matrix.mean(axis=0).tolist(),  # mean for each column
+            matrix.mean(axis=1).tolist(),  # mean for each row
+            matrix.mean().tolist()  # overall mean
+        ],
+        'variance': [
+            matrix.var(axis=0).tolist(),  # variance for each column
+            matrix.var(axis=1).tolist(),  # variance for each row
+            matrix.var().tolist()  # overall variance
+        ],
+        'standard deviation': [
+            matrix.std(axis=0).tolist(),  # std dev for each column
+            matrix.std(axis=1).tolist(),  # std dev for each row
+            matrix.std().tolist()  # overall std dev
+        ],
+        'max': [
+            matrix.max(axis=0).tolist(),  # max for each column
+            matrix.max(axis=1).tolist(),  # max for each row
+            matrix.max().tolist()  # overall max
+        ],
+        'min': [
+            matrix.min(axis=0).tolist(),  # min for each column
+            matrix.min(axis=1).tolist(),  # min for each row
+            matrix.min().tolist()  # overall min
+        ],
+        'sum': [
+            matrix.sum(axis=0).tolist(),  # sum for each column
+            matrix.sum(axis=1).tolist(),  # sum for each row
+            matrix.sum().tolist()  # overall sum
+        ]
+    }
+    
+    return calculations
